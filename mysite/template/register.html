@@ -1,0 +1,40 @@
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/base.css">
+  <link rel="stylesheet" href="/static/commons.css">
+  <link rel="stylesheet" href="/static/login.css">
+  <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.css">
+</head>
+
+<body>
+  <form method="POST" action="/register/">
+    <div id="login-box">
+      <h1>欢迎注册</h1>
+      <div class="form">
+        <div class="item">
+          <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          <input type="text" placeholder="用户名" name="username">
+        </div>
+        <div class="item">
+          <i class="fa fa-key" aria-hidden="true"></i>
+          <input type="password" placeholder="密码" name="password">
+        </div>
+        <div class="item">
+          <i class="fa fa-envelope-square" aria-hidden="true"></i>
+          <input type="email" placeholder="邮箱" name="email">
+        </div>
+        <div>
+          <a style="color: white">{{message}}</a>
+        </div>
+      </div>
+      <button class="btn" type="submit">注册</button>
+      <input class="btn" name="返回" type="button" value="返回" onclick="location.href='/login/'"/>
+    </div>
+    </form>
+</body>
+</html>

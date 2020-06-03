@@ -1,0 +1,48 @@
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index</title>
+	<link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/login.css">
+	<script src="/static/jquery/jquery.min.js"></script>
+	<script src="/static/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+</head>
+
+<form method="post" action="index.html">
+<div style="margin: 10% 10% 10% 10%">
+                <a class="btn btn-default btn-primary" href="/add-host/" role="button">添加主机</a>
+    <table class="table table-striped table-bordered  table-hover">
+
+        <tr>
+            <th>ID</th>
+            <th>IPADDR</th>
+            <th>HOSTNAME</th>
+            <th>INFORMATIONS</th>
+            <th>STATUS</th>
+            <th>OPERATION</th>
+        </tr>
+        <tbody>
+            {% for row in data %}
+        <tr>
+            <td>{{row.id}}</td>
+            <td>{{row.ipaddr}}</td>
+            <td>{{row.hostname}}</td>
+            <td>{{row.information}}</td>
+            <td>{{row.status}}</td>
+
+            <td>
+                <a class="glyphicon glyphicon-pencil" href="/edit-host/?nid={{ row.id }}"></a> |
+                <a class="glyphicon glyphicon-trash" href="/delete-host/?nid={{ row.id }}"></a>
+            </td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</form>

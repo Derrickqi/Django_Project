@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑主机信息</title>
+	<link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/login.css">
+	<script src="/static/jquery/jquery.min.js"></script>
+	<script src="/static/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+</head>
+
+
+<body>
+    <div>
+    <h1>编辑主机</h1>
+    <form method="post" action="/edit-host/?nid={{ current_host_list.id }}">
+            <p>ID：<input type="text" name="nid" readonly="readonly" value="{{current_host_list.id}}"/></p>
+            <p>主机IP：<input type="text" name="ipaddr" value="{{current_host_list.ipaddr}}"/></p>
+            <p>主机名：<input type="text" name="hostname" value="{{current_host_list.hostname}}"/></p>
+            <p>备  注：<input type="text" name="information" value="{{current_host_list.information}}"/></p>
+            <p>状  态：<input type="number" name="status" min="0" max="1" value="{{current_host_list.status}}"/></p>
+            <input class="btn btn-default" type="submit" value="Submit">
+            <a class="btn btn-default" href="/index/" role="button">返回</a>
+
+    </form>
+        </div>
+</body>
+</html>
