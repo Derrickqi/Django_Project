@@ -1,0 +1,51 @@
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x:hidden
+    }
+
+    .header img {
+        width: 100%;
+        display: block;
+        height: 400px;
+
+    }
+
+
+    .column {
+        margin: 0;
+        width: 25%;
+        float: left;
+        padding-top: 100px;
+
+}
+
+    .column ul {
+        text-align: center;
+    }
+
+    .column a{
+        font-size: 18px;
+    }
+
+    .column2 {
+        width: 70%;
+        float: right;
+        padding-right: 50px ;
+        text-align: center;
+    }
+
+    .table th,td {
+        text-align: center;
+        vertical-align: middle!important;
+        width: 400px;
+        height: 30px;
+
+    }
+
+    .footer {
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        clear: both;
+    }
