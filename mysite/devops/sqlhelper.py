@@ -5,7 +5,7 @@ import pymysql
 
 def get_list(sql):
     # 打开数据库连接
-    db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
+    db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
                          charset='utf8')
 
     # 使用 cursor() 方法创建一个游标对象 cursor
@@ -25,7 +25,7 @@ def get_list(sql):
 
 def get_one(sql, args):
     # 打开数据库连接
-    db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
+    db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
                          charset='utf8')
     cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
     cursor.execute(sql, args)
@@ -37,7 +37,7 @@ def get_one(sql, args):
 
 def modify(sql, args):
     # 打开数据库连接
-    db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
+    db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
                          charset='utf8')
     cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
     cursor.execute(sql, args)
@@ -48,7 +48,7 @@ def modify(sql, args):
 
 def delete(sql, args):
     # 打开数据库连接
-    db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
+    db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
                          charset='utf8')
     cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
     cursor.execute(sql, args)

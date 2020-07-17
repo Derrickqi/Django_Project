@@ -1,5 +1,8 @@
 # 导入 HttpResponse 模块
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
+import pymysql
+from .sqlhelper import get_one, modify, delete
+import json
 
 
 def login(request):
@@ -18,7 +21,7 @@ def login(request):
 def index(request):
     import pymysql
     # 打开数据库连接
-    db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
+    db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
                          charset='utf8')
 
     # 使用 cursor() 方法创建一个游标对象 cursor
@@ -55,25 +58,19 @@ def add_host(request):
         status = request.POST.get('status')
         information = request.POST.get('information')
 
-        import pymysql
-        db = pymysql.connect(host="192.168.253.128", port=3306, user="root", passwd="123456", db='mysql',
-                             charset='utf8')
-
-        cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
-
-        cursor.execute(
-            "insert into devops_hostinfo(ipaddr, hostname, status, information) values('%s','%s','%s','%s')" % (
-                ipaddr, hostname, status, information))
-
-        db.commit()
-
-        cursor.close()
-
-        db.close()
-        return redirect('/index/')
-
-
-from .sqlhelper import get_list, get_one, modify, delete
+        if len(ipaddr) > 0 and len(hostname) > 0 and len(status) > 0:
+            db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
+                                 charset='utf8')
+            cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
+            cursor.execute(
+                "insert into devops_hostinfo(ipaddr, hostname, status, information) values('%s','%s','%s','%s')" % (
+                    ipaddr, hostname, status, information))
+            db.commit()
+            cursor.close()
+            db.close()
+            return redirect('/index/')
+        else:
+            return render(request, 'add_host.html', {"msg": "IP/hostname/status 不能为空值"})
 
 
 # 编辑主机
@@ -102,3 +99,45 @@ def delete_host(request):
 
     delete("delete from devops_hostinfo where id=%s", [nid, ])
     return redirect('/index/')
+
+
+def model_add_host(request):
+    ipaddr = request.POST.get('ipaddr')
+    hostname = request.POST.get('hostname')
+    status = request.POST.get('status')
+    information = request.POST.get('information')
+
+    if len(ipaddr) > 0 and len(hostname) > 0 and len(status) > 0:
+        db = pymysql.connect(host="192.168.190.134", port=3306, user="root", passwd="123456", db='mysql',
+                             charset='utf8')
+        cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
+        cursor.execute(
+            "insert into devops_hostinfo(ipaddr, hostname, status, information) values('%s','%s','%s','%s')" % (
+                ipaddr, hostname, status, information))
+        db.commit()
+        cursor.close()
+        db.close()
+        return HttpResponse('ok')
+    else:
+        return HttpResponse('IP/hostname/status 不能为空值')
+
+
+def model_edit_host(request):
+    ret = {'status': True, 'message': None}
+    try:
+        nid = request.POST.get('nid')
+        ipaddr = request.POST.get('ipaddr')
+        hostname = request.POST.get('hostname')
+        status = request.POST.get('status')
+        information = request.POST.get('information')
+        print(nid, ipaddr, hostname, information, status)
+        modify("update devops_hostinfo set ipaddr=%s,hostname=%s,information=%s,status=%s where id=%s",
+               [ipaddr, hostname, information, status, nid, ])
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = "处理异常"
+    return HttpResponse(json.dumps(ret))
+
+
+def about(request):
+    return render(request, 'about.html')

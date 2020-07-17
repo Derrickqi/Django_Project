@@ -1,0 +1,268 @@
+{% extends 'base.html'%}
+
+
+
+
+{% block header %}
+ <div class="header">
+     <img src="https://images.unsplash.com/photo-1536532184021-da5392b55da1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" alt="img-header">
+ </div>
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<style>
+    .hide {
+        display: none;
+    }
+
+
+    /* 窗口 */
+    .shadow {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: black;
+        opacity: 0.4;
+        z-index: 999;
+    }
+
+    .model {
+        z-index: 1000;
+        position: fixed;
+        left: 40%;
+        top: 20%;
+        height: 300px;
+        width: 400px;
+        background-color: white;
+        text-align: center;
+        outline-style: none ;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 13px 14px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .model p {
+        margin-top: 30px;
+
+    }
+
+    .status input {
+        width: 150px;
+    }
+</style>
+
+
+
+
+
+
+<div class="column1">
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="/index/">主机列表</a></li>
+        <li><a href="#">主机详情</a></li>
+        <li><a href="#">系统设置</a></li>
+        <li><a href="/about/">关于我们</a></li>
+    </ul>
+</div>
+
+
+
+<div class="column2">
+<form method="post" action="index.html">
+    <a class="btn btn-default btn-primary" href="/add-host/" role="button">添加主机</a>
+    <a class="btn btn-default btn-primary" href="#" role="button" onclick="showModel();">添加主机对话框</a>
+    <table class="table table-hover">
+        <tr>
+            <th style="display: none">ID</th>
+            <th>IPADDR</th>
+            <th>HOSTNAME</th>
+            <th>INFORMATIONS</th>
+            <th>STATUS</th>
+            <th>OPERATION</th>
+        </tr>
+        <tbody>
+            {% for row in data %}
+        <tr>
+            <td style="display: none">{{row.id}}</td>
+            <td>{{row.ipaddr}}</td>
+            <td>{{row.hostname}}</td>
+            <td>{{row.information}}</td>
+            <td>{{row.status}}</td>
+
+            <td>
+                <a class="glyphicon glyphicon-pencil" href="/edit-host/?nid={{ row.id }}"></a>  |
+                <a onclick="modelEdit(this);">对话框编辑</a> |
+                <a class="glyphicon glyphicon-trash" href="/delete-host/?nid={{ row.id }}"></a>
+
+            </td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<nav aria-label="...">
+  <ul class="pager">
+    <li><a href="#">Previous</a></li>
+    <li><a href="#">Next</a></li>
+  </ul>
+</nav>
+
+
+</form>
+</div>
+
+
+
+
+<div id="shadow" class="shadow hide"></div>
+
+<!-- 添加主机模态框-->
+<div id="model" class="model hide">
+    <p>主机IP：<input type="text" id="ipaddr" name="ipaddr" required/></p>
+    <p>主机名：<input type="text" id="hostname" name="hostname" required/></p>
+    <p>备 注：<input type="text" id="infomation" name="information"/></p>
+    <p class="status">状 态：<input type="number" name="status" value="0" id="status" min="0" max="1"  required /></p>
+
+    <input class="btn btn-default" type="submit" value="提交" onclick="AjaxSend();" />
+    <input class="btn btn-default" type="submit" value="返回" href="/index/" onclick="cancle();"><br><span id="errormsg"></span>
+</div>
+
+
+<!-- 编辑主机模态框-->
+<div id="editmodel" class="model hide">
+    <input id="editNid" type="text" name="nid"  style="display:none;"/>
+    <p>主机IP：<input id="editIp" type="text" name="ipaddr" /></p>
+    <p>主机名：<input id="editHost" type="text" name="hostname" /></p>
+    <p>备  注：<input id="editInfomation" type="text" name="information" /></p>
+    <p>状  态：<input id="editStatus" type="number" name="status" min="0" max="1" /></p>
+    <input class="btn btn-default" type="submit" onclick="editAjaxSend();" value="Submit">
+    <input class="btn btn-default" type="submit" onclick="cancleModal();" value="返回" href="/index/" >
+</div>
+
+
+<script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+<script>
+
+
+    function cancle() {
+        document.getElementById('shadow').classList.add('hide');
+        document.getElementById('model').classList.add('hide');
+    }
+
+    <!--判断主机状态-->
+    function  AjaxSend() {
+        if($('#status').val() != 0 && $('#status').val() !=1) {
+            console.log('不ok')
+            $('#errormsg').text("状态值请输入0/1！！！！");
+            return
+        }
+
+    <!--获取各项数值-->
+        $.ajax({
+            url: '/model_add_host/',
+            type: 'POST',
+            data: {'ipaddr':$('#ipaddr').val(),
+                'hostname':$('#hostname').val(),
+                'information':$('#infomation').val(),
+                'status':$('#status').val(),
+            },
+
+            success: function (data) {
+                //当函数执行完成之后该函数自动执行
+                //data=服务端返回的值
+                console.log(data);
+                if (data === "ok") {
+                    location.href="/index/";
+                }
+                else {
+                    $('#errormsg').text(data);
+                }
+            }
+        })
+    }
+
+    function showModel() {
+        document.getElementById('shadow').classList.remove('hide');
+        document.getElementById('model').classList.remove('hide');
+    }
+
+    function cancleModal() {
+        document.getElementById('shadow').classList.add('hide');
+        document.getElementById('model').classList.add('hide');
+        document.getElementById('editmodel').classList.add('hide');
+    }
+
+
+
+    function modelEdit(ths) {
+        document.getElementById('shadow').classList.remove('hide');
+        document.getElementById('editmodel').classList.remove('hide');
+
+        /*
+        1.获取当前标签
+        2.当前标签的父级标签，再找其上层标签
+         */
+
+        var row = $(ths).parent().prevAll();
+        var  contentStatus = $(row[0]).text();
+        $('#editStatus').val(contentStatus);
+
+        var content = $(row[1]).text();
+        $('#editInfomation').val(content);
+
+        var contentHost = $(row[2]).text();
+        $('#editHost').val(contentHost);
+
+        var contentIp = $(row[3]).text();
+        $('#editIp').val(contentIp);
+
+        var contentNid = $(row[4]).text();
+        $('#editNid').val(contentNid);
+    }
+
+        function editAjaxSend() {
+
+        var contentStatus = $('#editStatus').val();
+        var content = $('#editInfomation').val();
+        var contentHost = $('#editHost').val();
+        var contentIp = $('#editIp').val();
+        var contentNid = $('#editNid').val();
+
+        console.log(contentNid,contentIp,contentHost,content,contentStatus);
+        $.ajax({
+            url:'/model_edit_host/',
+            type: 'POST',
+            data:{'nid':contentNid,'ipaddr':contentIp,'hostname':contentHost,'information':content,'status':contentStatus},
+
+
+            success:function (arg) {
+                //arg字符串类型
+            arg = JSON.parse(arg);
+            if (arg.status){
+                location.reload()
+            }else {
+                alert(arg.message);
+            }
+            }
+        })
+    }
+
+
+
+</script>
+
+{% endblock %}
+
+
+{% block footer %}
+
+
+{% endblock %}
